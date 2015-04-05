@@ -1,0 +1,34 @@
+{
+  "name": "cardsite",
+  "version": "0.0.0",
+  "authors": [
+    "Remy DeCausemaker <decause@redhat.com>"
+  ],
+  "description": "Experimentation with semantic-ui, nikola, grunt, and bower.",
+  "main": "cardsite.html",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "cardsite",
+    "semantic-ui",
+    "bower",
+    "gulp",
+    "decause",
+    "redhat",
+    "fedora"
+  ],
+  "license": "AGPLv3+",
+  "homepage": "http://github.com/decause/cardsite",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "semantic-ui-card": "~1.11.6"
+  }
+}
