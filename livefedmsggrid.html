@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <style>
+      .flex {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+    </style>
+    <link href="static/css/semantic.css" rel="stylesheet">
+  </head>
+<body>
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="/static/js/semantic.js"></script>
+<script>
+  socket = new WebSocket('wss://hub.fedoraproject.org:9939');
+
+  socket.onopen = function(e) {
+    // This subscribes you to "all" messages.  You can pass an actual topic in
+    // place of '*' to just get a portion of the activity.
+    socket.send(JSON.stringify({topic: '__topic_subscribe__', body: '*'}));
+  }
+  socket.onmessage = function(e) {
+    var raw_msg = JSON.parse(e.data);
+    var msg = raw_msg.body;
+    var topic = raw_msg.topic;
+    var tokens = topic.split('.');
+    tokens = tokens.slice(3, tokens.length);
+    topic = tokens.join('-');
+
+    if ($('#' + topic).length == 0) {
+      $('#container').append('<li class="ui button" id="' + topic + '" data-count="0">' + topic + ' 0</li>');
+    }
+
+    var count = parseInt($('#' + topic).attr('data-count'));
+    count = count + 1;
+    $('#' + topic).attr('data-count', count);
+    $('#' + topic).text(topic + ' ' + count);
+    $('#' + topic).transition('flash');
+  }
+</script>
+
+<ul id="container" class="ui buttons flex-container"></ul>
+
+
+</body>
+</html>
