@@ -36,7 +36,16 @@
     count = count + 1;
     $('#' + topic).attr('data-count', count);
     $('#' + topic).text(topic + ' ' + count);
-    $('#' + topic).transition('flash');
+    $('#' + topic).transition('pulse');
+
+    $.ajax({
+       dataType: 'jsonp',
+       url: 'https://apps.fedoraproject.org/datagrepper/id',
+       data: {id: msg['msg_id'], meta: 'icon'},
+       success: function(data) {
+           $('#' + topic).append('<img src="' + data['meta']['icon'] + '"/>');
+       }
+    });
   }
 </script>
 
