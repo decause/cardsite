@@ -1,10 +1,10 @@
+<!DOCTYPE html>
 <html>
+    <meta charset="utf-8" /> 
   <head>
     <style>
-      .flex {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
+      #container {
+        padding: 0;
       }
     </style>
     <link href="static/css/semantic.css" rel="stylesheet">
@@ -29,13 +29,14 @@
     topic = tokens.join('-');
 
     if ($('#' + topic).length == 0) {
-      $('#container').append('<li class="ui button" id="' + topic + '" data-count="0">' + topic + ' 0</li>');
+        $('#container').append('<li class="ui button" id="' + topic + '" data-count="0"><a class="ui image label"><img src=""/><span id="topicname">' + topic + '</span><span id="detail" class="detail"> 0</span></a></li>');
     }
 
     var count = parseInt($('#' + topic).attr('data-count'));
     count = count + 1;
     $('#' + topic).attr('data-count', count);
-    $('#' + topic).text(topic + ' ' + count);
+    $('#' + topic + ' #topicname').text(topic);
+    $('#' + topic + ' #detail').text(count.toString());
     $('#' + topic).transition('pulse');
 
     $.ajax({
@@ -43,7 +44,7 @@
        url: 'https://apps.fedoraproject.org/datagrepper/id',
        data: {id: msg['msg_id'], meta: 'icon'},
        success: function(data) {
-           $('#' + topic).append('<img src="' + data['meta']['icon'] + '"/>');
+           $('#' + topic + " img").attr('src', data['meta']['icon']);
        }
     });
   }
