@@ -36,7 +36,7 @@
     count = count + 1;
     $('#' + topic).attr('data-count', count);
     $('#' + topic).text(topic + ' ' + count);
-    $('#' + topic).transition('flash');
+    $('#' + topic).transition('pulse');
 
     $.ajax({
        dataType: 'jsonp',
