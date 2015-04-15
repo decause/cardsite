@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
-    <meta charset="utf-8" /> 
+    <meta charset="utf-8" />
   <head>
     <style>
-      #container {
+      #topics, #usernames, #packages {
         padding: 0;
+        height: 33%;
       }
     </style>
     <link href="static/css/semantic.css" rel="stylesheet">
@@ -20,6 +21,21 @@
     // place of '*' to just get a portion of the activity.
     socket.send(JSON.stringify({topic: '__topic_subscribe__', body: '*'}));
   }
+
+  var update_card = function(container, item, icon) {
+      if ($('#' + item).length == 0) {
+          $(container).append('<li class="ui button" id="' + item + '" data-count="0"><a class="ui image label"><img src=""/><span id="itemname">' + item + '</span><span id="detail" class="detail"> 0</span></a></li>');
+      }
+
+      var count = parseInt($('#' + item).attr('data-count'));
+      count = count + 1;
+      $(container + ' #' + item).attr('data-count', count);
+      $(container + ' #' + item + ' #itemname').text(item);
+      $(container + ' #' + item + ' #detail').text(count.toString());
+      $(container + ' #' + item + ' img').attr('src', icon);
+      $(container + ' #' + item).transition('pulse');
+  };
+
   socket.onmessage = function(e) {
     var raw_msg = JSON.parse(e.data);
     var msg = raw_msg.body;
@@ -28,32 +44,32 @@
     tokens = tokens.slice(3, tokens.length);
     topic = tokens.join('-');
 
-    if ($('#' + topic).length == 0) {
-        $('#container').append('<li class="ui button" id="' + topic + '" data-count="0"><a class="ui image label"><img src=""/><span id="topicname">' + topic + '</span><span id="detail" class="detail"> 0</span></a></li>');
-    }
-
-    var count = parseInt($('#' + topic).attr('data-count'));
-    count = count + 1;
-    $('#' + topic).attr('data-count', count);
-    $('#' + topic + ' #topicname').text(topic);
-    $('#' + topic + ' #detail').text(count.toString());
-    $('#' + topic).transition('pulse');
-
-    if ($('#' + topic).length == 1) {
-        $.ajax({
-           dataType: 'jsonp',
-           url: 'https://apps.fedoraproject.org/datagrepper/id',
-           data: {id: msg['msg_id'], meta: 'icon'},
-           success: function(data) {
-               $('#' + topic + " img").attr('src', data['meta']['icon']);
-           }
-        });
-    }
+    $.ajax({
+        dataType: 'jsonp',
+        url: 'https://apps.fedoraproject.org/datagrepper/id',
+        data: $.param({id: msg['msg_id'], meta: ['icon', 'secondary_icon', 'usernames', 'packages']}, traditional=true),
+        success: function(data) {
+            update_card('#topics', topic, data.meta.icon)
+            $.each(data.meta.usernames, function(i, username){
+                update_card('#usernames', username, data.meta.secondary_icon);
+            });
+            $.each(data.meta.packages, function(i, pkg){
+                update_card('#packages', pkg, 'https://apps.fedoraproject.org/packages/images/icons/' + pkg + '.png');
+            });
+       }
+    });
   }
 </script>
 
-<ul id="container" class="ui buttons flex-container"></ul>
+<ul id="topics" class="ui buttons flex-container"></ul>
 
+<hr/>
+
+<ul id="usernames" class="ui buttons flex-container"></ul>
+
+<hr/>
+
+<ul id="packages" class="ui buttons flex-container"></ul>
 
 </body>
 </html>
