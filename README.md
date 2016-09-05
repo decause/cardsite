@@ -1,6 +1,11 @@
 cardsite
 ========
 
+## [Project moved to Pagure](https://pagure.io/cardsite)
+
+**Please file any issues or pull requests against the [Pagure project](https://pagure.io/cardsite)!**
+
+
 I just found semantic-ui, and it seems like it is super amazing. Rather than
 just downloading it, I’ve used this opportunity to brush up on how to use a
 javascript build chain.
